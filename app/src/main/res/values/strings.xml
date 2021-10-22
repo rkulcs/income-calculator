@@ -4,4 +4,8 @@
     <string name="add_shift">Add Shift</string>
     <string name="view_shifts">View Shifts</string>
     <string name="calculate_income">Calculate Income</string>
+    <string name="currency_symbol">Currency Symbol</string>
+    <string name="value_of_one_unit_in_subunits">Value of One Unit In Subunit</string>
+    <string name="has_subunit">Has Subunit</string>
+    <string name="update_wage_details">Update Wage Details</string>
 </resources>

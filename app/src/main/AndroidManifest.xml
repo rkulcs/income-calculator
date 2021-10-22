@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IncomeCalculator">
         <activity
+            android:name=".ChangeWageDetailsActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
