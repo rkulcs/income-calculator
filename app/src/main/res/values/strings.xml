@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">IncomeCalculator</string>
+    <string name="change_wage_details">Change Wage Details</string>
+    <string name="add_shift">Add Shift</string>
+    <string name="view_shifts">View Shifts</string>
+    <string name="calculate_income">Calculate Income</string>
 </resources>
