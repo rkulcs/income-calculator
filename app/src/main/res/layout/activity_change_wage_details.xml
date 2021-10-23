@@ -85,7 +85,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/update_wage_details_button"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/listPreferredItemHeight"
                 android:layout_marginTop="2dp"

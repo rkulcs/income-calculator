@@ -11,8 +11,6 @@ import com.incomecalculator.db.DatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseHelper dbHelper;
-
     private Button changeWageDetailsButton;
     private Button addShiftButton;
     private Button viewShiftsButton;
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeDatabase() {
 
-        dbHelper = new DatabaseHelper(getApplicationContext());
+        DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
         dbHelper.getReadableDatabase().close();
     }
 }

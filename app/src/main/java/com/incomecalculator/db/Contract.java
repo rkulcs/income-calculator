@@ -1,5 +1,8 @@
 package com.incomecalculator.db;
 
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 public final class Contract {
@@ -19,6 +22,31 @@ public final class Contract {
                                 "%s TEXT, %s BOOLEAN, %s INTEGER)",
                         TABLE_NAME, _ID, COLUMN_NAME_SYMBOL, COLUMN_NAME_HAS_SUBUNIT,
                         COLUMN_NAME_CURRENCY_IN_SUBUNITS);
+
+        public static boolean addCurrency(SQLiteDatabase db, String symbol,
+                                          boolean hasSubunit, int currencyInSubunits) {
+
+            String query = String.format("SELECT * FROM %s", TABLE_NAME);
+
+            Cursor cursor = db.rawQuery(query, null);
+
+            if (cursor.getCount() >= 1)
+                return false;
+
+            cursor.close();
+
+            query = String.format("INSERT INTO %s (%s, %s, %s) VALUES ('%s', '%b', %d)",
+                    TABLE_NAME, COLUMN_NAME_SYMBOL, COLUMN_NAME_HAS_SUBUNIT,
+                    COLUMN_NAME_CURRENCY_IN_SUBUNITS, symbol, hasSubunit, currencyInSubunits);
+
+            try {
+                db.execSQL(query);
+            } catch (SQLException e) {
+                return false;
+            }
+
+            return true;
+        }
     }
 
     public static class WageInformation implements BaseColumns {
