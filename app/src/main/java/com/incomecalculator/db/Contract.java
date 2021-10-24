@@ -5,11 +5,13 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
+import com.incomecalculator.wages.Currency;
+
 public final class Contract {
 
     private Contract() {}
 
-    public static class Currency implements BaseColumns {
+    public static class CurrencyInformation implements BaseColumns {
 
         public static final String TABLE_NAME = "currencyInformation";
 
@@ -26,18 +28,14 @@ public final class Contract {
         public static boolean addCurrency(SQLiteDatabase db, String symbol,
                                           boolean hasSubunit, int currencyInSubunits) {
 
-            String query = String.format("SELECT * FROM %s", TABLE_NAME);
-
-            Cursor cursor = db.rawQuery(query, null);
-
-            if (cursor.getCount() >= 1)
+            if (getCurrency(db) != null)
                 return false;
 
-            cursor.close();
-
-            query = String.format("INSERT INTO %s (%s, %s, %s) VALUES ('%s', '%b', %d)",
+            String query = String.format(
+                    "INSERT INTO %s (%s, %s, %s) VALUES ('%s', '%b', %d)",
                     TABLE_NAME, COLUMN_NAME_SYMBOL, COLUMN_NAME_HAS_SUBUNIT,
-                    COLUMN_NAME_CURRENCY_IN_SUBUNITS, symbol, hasSubunit, currencyInSubunits);
+                    COLUMN_NAME_CURRENCY_IN_SUBUNITS, symbol, hasSubunit,
+                    currencyInSubunits);
 
             try {
                 db.execSQL(query);
@@ -46,6 +44,31 @@ public final class Contract {
             }
 
             return true;
+        }
+
+        public static Currency getCurrency(SQLiteDatabase db) {
+
+            String query = String.format("SELECT * FROM %s", TABLE_NAME);
+
+            Cursor cursor = db.rawQuery(query, null);
+
+            if (cursor.getCount() == 0)
+                return null;
+
+            cursor.moveToFirst();
+
+            String symbol = cursor.getString(
+                    cursor.getColumnIndexOrThrow(COLUMN_NAME_SYMBOL));
+            boolean hasSubunit =
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            COLUMN_NAME_HAS_SUBUNIT)).equals("true");
+            int valueInSubunits =
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            COLUMN_NAME_CURRENCY_IN_SUBUNITS));
+
+            cursor.close();
+
+            return new Currency(symbol, hasSubunit, valueInSubunits);
         }
     }
 
@@ -60,10 +83,10 @@ public final class Contract {
                 String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY, " +
                         "%s INTEGER, %s INTEGER, FOREIGN KEY (%s) REFERENCES %s(%s))",
                         TABLE_NAME, _ID, COLUMN_NAME_HOURLY_RATE, COLUMN_NAME_CURRENCY,
-                        COLUMN_NAME_CURRENCY, Currency.TABLE_NAME, Currency._ID);
+                        COLUMN_NAME_CURRENCY, CurrencyInformation.TABLE_NAME, CurrencyInformation._ID);
     }
 
-    public static class Shift implements BaseColumns {
+    public static class ShiftInformation implements BaseColumns {
 
         public static final String TABLE_NAME = "shifts";
 

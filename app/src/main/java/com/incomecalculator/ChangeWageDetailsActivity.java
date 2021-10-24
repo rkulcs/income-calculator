@@ -17,6 +17,7 @@ import com.incomecalculator.wages.Currency;
 public class ChangeWageDetailsActivity extends AppCompatActivity {
 
     SQLiteDatabase db;
+    Currency currency;
 
     //--- Form Components ---//
 
@@ -32,8 +33,10 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_wage_details);
 
-        setupFormComponents();
         openDatabase();
+        currency = Contract.CurrencyInformation.getCurrency(db);
+
+        setupFormComponents();
     }
 
     //--- Event Listeners ---//
@@ -55,10 +58,16 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
 
         String hourlyWage = rateOfPayField.getEditText().getText().toString().trim();
 
-        Currency currency = new Currency(currencySymbol, hasSubunit, currencyInSubunit);
-
         if (!validateInputs(currencySymbol, hasSubunit, currencyInSubunit, hourlyWage))
             return;
+
+        if (currency == null) {
+            currency = new Currency(currencySymbol, hasSubunit, currencyInSubunit);
+        } else {
+            currency.setSymbol(currencySymbol);
+            currency.setHasSubunit(hasSubunit);
+            currency.setValueInSubunit(currencyInSubunit);
+        }
 
         if (currency.saveInDatabase(db)) {
             finish();
@@ -128,6 +137,16 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
         submitFormButton = findViewById(R.id.update_wage_details_button);
 
         submitFormButton.setOnClickListener((view) -> submitWageDetails(view));
+
+        if (currency != null) {
+            currencySymbolField.getEditText().setText(currency.getSymbol());
+
+            if (currency.hasSubunit())
+                hasSubunitCheckbox.setChecked(true);
+
+            currencyInSubunitField.getEditText().setText(
+                    Integer.toString(currency.getValueInSubunit()));
+        }
     }
 
     private void openDatabase() {

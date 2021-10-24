@@ -76,6 +76,6 @@ public class Currency {
         if (hasSubunit && valueInSubunit <= 0)
             return false;
 
-        return Contract.Currency.addCurrency(db, symbol, hasSubunit, valueInSubunit);
+        return Contract.CurrencyInformation.addCurrency(db, symbol, hasSubunit, valueInSubunit);
     }
 }
