@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputLayout;
 import com.incomecalculator.db.Contract;
 import com.incomecalculator.db.DatabaseHelper;
+import com.incomecalculator.wages.Currency;
 
 public class ChangeWageDetailsActivity extends AppCompatActivity {
 
@@ -54,10 +55,12 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
 
         String hourlyWage = rateOfPayField.getEditText().getText().toString().trim();
 
+        Currency currency = new Currency(currencySymbol, hasSubunit, currencyInSubunit);
+
         if (!validateInputs(currencySymbol, hasSubunit, currencyInSubunit, hourlyWage))
             return;
 
-        if (Contract.Currency.addCurrency(db, currencySymbol, hasSubunit, currencyInSubunit)) {
+        if (currency.saveInDatabase(db)) {
             finish();
         }
     }
@@ -67,7 +70,7 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
     private boolean validateInputs(String symbol, boolean hasSubunit,
                                    int currencyInSubunit, String hourlyWage) {
 
-        if (!isValidSymbol(symbol)) {
+        if (!Currency.isValidSymbol(symbol)) {
             Toast.makeText(this, "Invalid currency symbol", Toast.LENGTH_SHORT);
             return false;
         } else if (hasSubunit && currencyInSubunit <= 0) {
@@ -79,16 +82,6 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    private boolean isValidSymbol(String symbol) {
-
-        for (int i = 0; i < symbol.length(); i++) {
-            if (Character.isDigit(symbol.charAt(i)))
-                return false;
-        }
-
-        return (symbol.length() > 0);
     }
 
     private boolean isValidHourlyWage(String hourlyWage) {
