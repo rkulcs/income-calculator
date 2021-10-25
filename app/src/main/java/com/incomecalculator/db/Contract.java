@@ -29,13 +29,33 @@ public final class Contract {
                                           boolean hasSubunit, int currencyInSubunits) {
 
             if (getCurrency(db) != null)
-                return false;
+                return updateCurrency(db, symbol, hasSubunit, currencyInSubunits);
 
             String query = String.format(
                     "INSERT INTO %s (%s, %s, %s) VALUES ('%s', '%b', %d)",
                     TABLE_NAME, COLUMN_NAME_SYMBOL, COLUMN_NAME_HAS_SUBUNIT,
                     COLUMN_NAME_CURRENCY_IN_SUBUNITS, symbol, hasSubunit,
                     currencyInSubunits);
+
+            try {
+                db.execSQL(query);
+            } catch (SQLException e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static boolean updateCurrency(SQLiteDatabase db, String symbol,
+                                             boolean hasSubunit, int currencyInSubunits) {
+
+            String query = String.format(
+                    "UPDATE %s SET %s = '%s', %s = '%b', %s = %d WHERE %s = 1",
+                    TABLE_NAME, COLUMN_NAME_SYMBOL, symbol,
+                    COLUMN_NAME_HAS_SUBUNIT, hasSubunit,
+                    COLUMN_NAME_CURRENCY_IN_SUBUNITS, currencyInSubunits,
+                    _ID
+            );
 
             try {
                 db.execSQL(query);
