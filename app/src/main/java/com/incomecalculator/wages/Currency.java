@@ -61,6 +61,8 @@ public class Currency {
 
     public static boolean isValidSymbol(String symbol) {
 
+        symbol = symbol.trim();
+
         for (int i = 0; i < symbol.length(); i++) {
             if (Character.isDigit(symbol.charAt(i)))
                 return false;
