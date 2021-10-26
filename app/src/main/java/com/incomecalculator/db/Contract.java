@@ -37,13 +37,7 @@ public final class Contract {
                     COLUMN_NAME_CURRENCY_IN_SUBUNITS, symbol, hasSubunit,
                     currencyInSubunits);
 
-            try {
-                db.execSQL(query);
-            } catch (SQLException e) {
-                return false;
-            }
-
-            return true;
+            return executeQuery(db, query);
         }
 
         public static boolean updateCurrency(SQLiteDatabase db, String symbol,
@@ -57,13 +51,7 @@ public final class Contract {
                     _ID
             );
 
-            try {
-                db.execSQL(query);
-            } catch (SQLException e) {
-                return false;
-            }
-
-            return true;
+            return executeQuery(db, query);
         }
 
         public static Currency getCurrency(SQLiteDatabase db) {
@@ -103,7 +91,14 @@ public final class Contract {
                 String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY, " +
                         "%s INTEGER, %s INTEGER, FOREIGN KEY (%s) REFERENCES %s(%s))",
                         TABLE_NAME, _ID, COLUMN_NAME_HOURLY_RATE, COLUMN_NAME_CURRENCY,
-                        COLUMN_NAME_CURRENCY, CurrencyInformation.TABLE_NAME, CurrencyInformation._ID);
+                        COLUMN_NAME_CURRENCY, CurrencyInformation.TABLE_NAME,
+                        CurrencyInformation._ID);
+
+//        public static boolean addWage(SQLiteDatabase db, String hourlyRate,
+//                                      Currency currency) {
+//
+//
+//        }
     }
 
     public static class ShiftInformation implements BaseColumns {
@@ -125,5 +120,16 @@ public final class Contract {
                         COLUMN_MINUTES_WORKED, COLUMN_WAGE_INFORMATION,
                         COLUMN_WAGE_INFORMATION, WageInformation.TABLE_NAME,
                         WageInformation._ID);
+    }
+
+    private static boolean executeQuery(SQLiteDatabase db, String query) {
+
+        try {
+            db.execSQL(query);
+        } catch (SQLException e) {
+            return false;
+        }
+
+        return true;
     }
 }
