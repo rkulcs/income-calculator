@@ -94,11 +94,11 @@ public final class Contract {
                         COLUMN_NAME_CURRENCY, CurrencyInformation.TABLE_NAME,
                         CurrencyInformation._ID);
 
-//        public static boolean addWage(SQLiteDatabase db, String hourlyRate,
-//                                      Currency currency) {
-//
-//
-//        }
+        public static boolean addWage(SQLiteDatabase db, String hourlyRate,
+                                      Currency currency) {
+
+            throw new UnsupportedOperationException();
+        }
     }
 
     public static class ShiftInformation implements BaseColumns {

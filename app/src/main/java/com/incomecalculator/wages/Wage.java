@@ -55,6 +55,10 @@ public class Wage {
 
     //--- Validation Methods ---//
 
+    /**
+     * Checks whether the given hourly rate of pay String is valid based on
+     * its currency's subunit's value.
+     */
     public static boolean isValidHourlyRateString(String hourlyRateString,
                                                   boolean hasSubunit, int valueInSubunits) {
 
@@ -110,11 +114,7 @@ public class Wage {
         // Split value at the decimal point
         String[] components = hourlyRateString.split("\\.");
 
-        // Pad the end of the string with zeroes if needed
-        int digitsAfterPoint = Integer.toString(currency.getValueInSubunit() - 1).length();
-
-        while (components[1].length() < digitsAfterPoint)
-            components[1] += "0";
+        components[1] = padWithZeroes(components[1]);
 
         int hourlyRate = Integer.parseInt(components[0]) * currency.getValueInSubunit()
                 + Integer.parseInt(components[1]);
@@ -122,7 +122,34 @@ public class Wage {
         return hourlyRate;
     }
 
+    /**
+     * Creates a String which represents the hourly rate of pay in terms of
+     * both the currency and its subunit (if it has one).
+     */
     private String createHourlyRateString(int hourlyRate) {
-        throw new UnsupportedOperationException();
+
+        if (!currency.hasSubunit())
+            return Integer.toString(hourlyRate);
+
+        String units = Integer.toString(hourlyRate / currency.getValueInSubunit());
+        String subunits = Integer.toString(hourlyRate % currency.getValueInSubunit());
+        subunits = padWithZeroes(subunits);
+
+        return units + "." + subunits;
+    }
+
+    /**
+     * Pads the end of the subunit component of a String with zeroes if needed.
+     */
+    private String padWithZeroes(String value) {
+
+        // Get the expected number of digits after the decimal point
+        int digitsAfterPoint = Integer.toString(
+                currency.getValueInSubunit() - 1).length();
+
+        while (value.length() < digitsAfterPoint)
+            value += "0";
+
+        return value;
     }
 }
