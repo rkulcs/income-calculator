@@ -6,8 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
 import com.incomecalculator.wages.Currency;
+import com.incomecalculator.wages.Wage;
 
 public final class Contract {
+
+    private static final int DEFAULT_ID = 1;
 
     private Contract() {}
 
@@ -94,10 +97,50 @@ public final class Contract {
                         COLUMN_NAME_CURRENCY, CurrencyInformation.TABLE_NAME,
                         CurrencyInformation._ID);
 
-        public static boolean addWage(SQLiteDatabase db, String hourlyRate,
-                                      Currency currency) {
+        public static Wage getWage(SQLiteDatabase db) {
 
-            throw new UnsupportedOperationException();
+            String query = String.format("SELECT * FROM %s", TABLE_NAME);
+
+            Cursor cursor = db.rawQuery(query, null);
+
+            if (cursor.getCount() == 0)
+                return null;
+
+            cursor.moveToFirst();
+
+            int hourlyRate = cursor.getInt(cursor.getColumnIndexOrThrow(
+                    COLUMN_NAME_HOURLY_RATE));
+            Currency currency = CurrencyInformation.getCurrency(db);
+
+            if (currency == null)
+                return null;
+
+            cursor.close();
+
+            return new Wage(hourlyRate, currency);
+        }
+
+        public static boolean addWage(SQLiteDatabase db, int hourlyRate) {
+
+            if (getWage(db) != null)
+                return updateWage(db, hourlyRate);
+
+            String query = String.format(
+                    "INSERT INTO %s (%s, %s) VALUES (%d, %d)",
+                    TABLE_NAME, COLUMN_NAME_HOURLY_RATE, COLUMN_NAME_CURRENCY,
+                    hourlyRate, DEFAULT_ID);
+
+            return executeQuery(db, query);
+        }
+
+        public static boolean updateWage(SQLiteDatabase db, int hourlyRate) {
+
+            String query = String.format(
+                    "UPDATE %s SET %s = %d WHERE %s = 1",
+                    TABLE_NAME, COLUMN_NAME_HOURLY_RATE, hourlyRate, _ID
+            );
+
+            return executeQuery(db, query);
         }
     }
 

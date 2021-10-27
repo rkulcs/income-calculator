@@ -13,10 +13,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.incomecalculator.db.Contract;
 import com.incomecalculator.db.DatabaseHelper;
 import com.incomecalculator.wages.Currency;
+import com.incomecalculator.wages.Wage;
 
 public class ChangeWageDetailsActivity extends AppCompatActivity {
 
     SQLiteDatabase db;
+    Wage wage;
     Currency currency;
 
     //--- Form Components ---//
@@ -35,6 +37,7 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
 
         openDatabase();
         currency = Contract.CurrencyInformation.getCurrency(db);
+        wage = Contract.WageInformation.getWage(db);
 
         setupFormComponents();
     }
@@ -61,15 +64,10 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
         if (!validateInputs(currencySymbol, hasSubunit, currencyInSubunit, hourlyWage))
             return;
 
-        if (currency == null) {
-            currency = new Currency(currencySymbol, hasSubunit, currencyInSubunit);
-        } else {
-            currency.setSymbol(currencySymbol);
-            currency.setHasSubunit(hasSubunit);
-            currency.setValueInSubunit(currencyInSubunit);
-        }
+        currency = new Currency(currencySymbol, hasSubunit, currencyInSubunit);
+        wage = new Wage(hourlyWage, currency);
 
-        if (currency.saveInDatabase(db)) {
+        if (currency.saveInDatabase(db) && wage.saveInDatabase(db)) {
             finish();
         }
     }
@@ -146,6 +144,10 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
 
             currencyInSubunitField.getEditText().setText(
                     Integer.toString(currency.getValueInSubunit()));
+        }
+
+        if (wage != null) {
+            rateOfPayField.getEditText().setText(wage.getHourlyRateString());
         }
     }
 

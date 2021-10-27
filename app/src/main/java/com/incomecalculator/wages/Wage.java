@@ -1,5 +1,10 @@
 package com.incomecalculator.wages;
 
+import android.database.ContentObservable;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.incomecalculator.db.Contract;
+
 /**
  * Represents details about the hourly wage, such as the hourly rate of pay and
  * the currency in which the wage is paid.
@@ -45,8 +50,20 @@ public class Wage {
         return hourlyRate;
     }
 
+    public void setHourlyRate(int hourlyRate) {
+
+        this.hourlyRate = hourlyRate;
+        this.hourlyRateString = createHourlyRateString(hourlyRate);
+    }
+
     public String getHourlyRateString() {
         return hourlyRateString;
+    }
+
+    public void setHourlyRateString(String hourlyRateString) {
+
+        this.hourlyRateString = hourlyRateString;
+        this.hourlyRate = calculateHourlyRate(hourlyRateString);
     }
 
     public Currency getCurrency() {
@@ -95,6 +112,13 @@ public class Wage {
 
         return isValidHourlyRateString(hourlyRateString, currency.hasSubunit(),
                 currency.getValueInSubunit());
+    }
+
+    //--- Database Interaction Methods ---//
+
+    public boolean saveInDatabase(SQLiteDatabase db) {
+
+        return Contract.WageInformation.addWage(db, hourlyRate);
     }
 
     //--- Helper Methods ---//
