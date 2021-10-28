@@ -68,6 +68,8 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
         wage = new Wage(hourlyWage, currency);
 
         if (currency.saveInDatabase(db) && wage.saveInDatabase(db)) {
+            Toast.makeText(
+                    this, "Wage details updated", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -78,37 +80,20 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
                                    int currencyInSubunit, String hourlyWage) {
 
         if (!Currency.isValidSymbol(symbol)) {
-            Toast.makeText(this, "Invalid currency symbol", Toast.LENGTH_SHORT);
+            Toast.makeText(
+                    this, "Invalid currency symbol", Toast.LENGTH_SHORT).show();
             return false;
         } else if (hasSubunit && currencyInSubunit <= 0) {
-            Toast.makeText(this, "Invalid value in subunit", Toast.LENGTH_SHORT);
+            Toast.makeText(
+                    this, "Invalid value in subunit", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (!isValidHourlyWage(hourlyWage)) {
-            Toast.makeText(this, "Invalid hourly rate of pay", Toast.LENGTH_SHORT);
+        } else if (!Wage.isValidHourlyRateString(hourlyWage, hasSubunit, currencyInSubunit)) {
+            Toast.makeText(
+                    this, "Invalid hourly rate of pay", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         return true;
-    }
-
-    private boolean isValidHourlyWage(String hourlyWage) {
-
-        int periodCount = 0;
-
-        for (int i = 0; i < hourlyWage.length(); i++) {
-            char currentCharacter = hourlyWage.charAt(i);
-
-            if (currentCharacter == '.') {
-                periodCount++;
-
-                if (periodCount > 1)
-                    return false;
-            } else if (!Character.isDigit(currentCharacter)) {
-                return false;
-            }
-        }
-
-        return (hourlyWage.length() > 0);
     }
 
     //--- Helper Methods ---//

@@ -138,10 +138,12 @@ public class Wage {
         // Split value at the decimal point
         String[] components = hourlyRateString.split("\\.");
 
-        components[1] = padWithZeroes(components[1]);
+        int hourlyRate = Integer.parseInt(components[0]) * currency.getValueInSubunit();
 
-        int hourlyRate = Integer.parseInt(components[0]) * currency.getValueInSubunit()
-                + Integer.parseInt(components[1]);
+        if (components.length > 1) {
+            components[1] = padWithZeroes(components[1]);
+            hourlyRate += Integer.parseInt(components[1]);
+        }
 
         return hourlyRate;
     }
