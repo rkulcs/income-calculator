@@ -25,9 +25,17 @@ public class MainActivity extends AppCompatActivity {
         initializeButtons();
     }
 
+    //--- Activity Launchers ---//
+
     public void launchChangeWageDetailsActivity(View view) {
 
         Intent intent = new Intent(this, ChangeWageDetailsActivity.class);
+        startActivity(intent);
+    }
+
+    public void launchAddShiftActivity(View view) {
+
+        Intent intent = new Intent(this, AddShiftActivity.class);
         startActivity(intent);
     }
 
@@ -40,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
         changeWageDetailsButton.setOnClickListener((view) -> {
             launchChangeWageDetailsActivity(view);
+        });
+
+        addShiftButton.setOnClickListener((view) -> {
+            launchAddShiftActivity(view);
         });
     }
 

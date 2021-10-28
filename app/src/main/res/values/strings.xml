@@ -8,4 +8,9 @@
     <string name="value_of_one_unit_in_subunits">Value of One Unit In Subunit</string>
     <string name="has_subunit">Has Subunit</string>
     <string name="update_wage_details">Update Wage Details</string>
+    <string name="start_date_yyyy_mm_dd">Start Date (YYYY/MM/DD)</string>
+    <string name="end_date_yyyy_mm_dd">End Date (YYYY/MM/DD)</string>
+    <string name="start_time_hh_mm">Start Time (HH:MM)</string>
+    <string name="end_time_hh_mm">End Time (HH:MM)</string>
+    <string name="break_in_minutes">Break in Minutes</string>
 </resources>
