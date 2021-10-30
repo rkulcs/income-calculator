@@ -17,17 +17,17 @@ import com.incomecalculator.wages.Wage;
 
 public class ChangeWageDetailsActivity extends AppCompatActivity {
 
-    SQLiteDatabase db;
-    Wage wage;
-    Currency currency;
+    private SQLiteDatabase db;
+    private Wage wage;
+    private Currency currency;
 
     //--- Form Components ---//
 
-    TextInputLayout currencySymbolField;
-    CheckBox hasSubunitCheckbox;
-    TextInputLayout currencyInSubunitField;
-    TextInputLayout rateOfPayField;
-    Button submitFormButton;
+    private TextInputLayout currencySymbolField;
+    private CheckBox hasSubunitCheckbox;
+    private TextInputLayout currencyInSubunitField;
+    private TextInputLayout rateOfPayField;
+    private Button submitFormButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_wage_details);
 
-        openDatabase();
+        db = DatabaseHelper.getDatabase(getApplicationContext());
         currency = Contract.CurrencyInformation.getCurrency(db);
         wage = Contract.WageInformation.getWage(db);
 
@@ -134,11 +134,5 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
         if (wage != null) {
             rateOfPayField.getEditText().setText(wage.getHourlyRateString());
         }
-    }
-
-    private void openDatabase() {
-
-        DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
-        db = dbHelper.getWritableDatabase();
     }
 }

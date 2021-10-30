@@ -32,4 +32,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int previousVersion, int nextVersion) {
 
     }
+
+    public static SQLiteDatabase getDatabase(Context context) {
+
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        return dbHelper.getWritableDatabase();
+    }
 }
