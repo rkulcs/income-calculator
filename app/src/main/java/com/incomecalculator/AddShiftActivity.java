@@ -1,7 +1,5 @@
 package com.incomecalculator;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -14,21 +12,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.incomecalculator.db.DatabaseHelper;
 import com.incomecalculator.shifts.Shift;
 
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 public class AddShiftActivity extends AppCompatActivity {
 
     private SQLiteDatabase db;
-    private Calendar calendar = Calendar.getInstance();
 
     //--- Form Components ---//
 
@@ -54,9 +44,9 @@ public class AddShiftActivity extends AppCompatActivity {
 
     public void submitShiftDetails(View view) {
 
-        Date start = getDateTime(startDateField.getEditText().getText().toString(),
+        Calendar start = getDateTime(startDateField.getEditText().getText().toString(),
                 startTimeField.getEditText().getText().toString());
-        Date end = getDateTime(endDateField.getEditText().getText().toString(),
+        Calendar end = getDateTime(endDateField.getEditText().getText().toString(),
                 endTimeField.getEditText().getText().toString());
 
         if (start == null || end == null || start.after(end)) {
@@ -78,24 +68,34 @@ public class AddShiftActivity extends AppCompatActivity {
             Toast.makeText(this, "Break is too long", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        Shift shift = new Shift(start, end, breakInMinutes);
+
+        if (shift.saveInDatabase(db)) {
+            Toast.makeText(this, "Shift added", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(this, "Could not add shift", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     //--- Validation Methods ---//
 
-    private boolean isValidBreak(Date start, Date end, int breakInMinutes) {
+    private boolean isValidBreak(Calendar start, Calendar end, int breakInMinutes) {
 
-        long startTime = start.getTime();
-        long endTime = end.getTime();
-        long shiftLength = endTime - startTime;
+        long startTime = start.getTimeInMillis();
+        long endTime = end.getTimeInMillis();
+        int shiftLength = (int) (endTime - startTime) / 1000 / 60;
 
-        long breakInMilliseconds = (long) breakInMinutes * 1000;
-
-        return (breakInMilliseconds < shiftLength);
+        return (breakInMinutes < shiftLength);
     }
 
     //--- Helper Methods ---//
 
-    private Date getDateTime(String date, String time) {
+    private Calendar getDateTime(String date, String time) {
+
+        Calendar calendar = Calendar.getInstance();
 
         int[] dateComponents = getDateComponents(date);
         int[] timeComponents = getTimeComponents(time);
@@ -111,11 +111,18 @@ public class AddShiftActivity extends AppCompatActivity {
             return null;
         }
 
-        return calendar.getTime();
+        return calendar;
     }
 
     private int[] getDateComponents(String date) {
-        return getIntegerComponents(date, "/", 3);
+
+        int[] components = getIntegerComponents(date, "/", 3);
+
+        // Adjust month value for Calendar instance representing the date
+        if (components != null)
+            components[1]--;
+
+        return components;
     }
 
     private int[] getTimeComponents(String time) {

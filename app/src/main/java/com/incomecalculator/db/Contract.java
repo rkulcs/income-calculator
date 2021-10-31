@@ -8,6 +8,8 @@ import android.provider.BaseColumns;
 import com.incomecalculator.wages.Currency;
 import com.incomecalculator.wages.Wage;
 
+import java.sql.Date;
+
 public final class Contract {
 
     private static final int DEFAULT_ID = 1;
@@ -150,19 +152,39 @@ public final class Contract {
 
         public static final String COLUMN_NAME_START_DATETIME = "startDateTime";
         public static final String COLUMN_NAME_END_DATETIME = "endDateTime";
-        public static final String COLUMN_BREAK_IN_MINUTES = "breakInMinutes";
-        public static final String COLUMN_MINUTES_WORKED = "minutesWorked";
-        public static final String COLUMN_WAGE_INFORMATION = "wageDetails";
+        public static final String COLUMN_NAME_BREAK_IN_MINUTES = "breakInMinutes";
+        public static final String COLUMN_NAME_MINUTES_WORKED = "minutesWorked";
+        public static final String COLUMN_NAME_WAGE_INFORMATION = "wageDetails";
 
         public static final String SQL_CREATE_TABLE =
                 String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY, " +
                                 "%s DATETIME, %s DATETIME, %s INTEGER, %s INTEGER, " +
                                 "%s INTEGER, FOREIGN KEY (%s) REFERENCES %s(%s))",
                         TABLE_NAME, _ID, COLUMN_NAME_START_DATETIME,
-                        COLUMN_NAME_END_DATETIME, COLUMN_BREAK_IN_MINUTES,
-                        COLUMN_MINUTES_WORKED, COLUMN_WAGE_INFORMATION,
-                        COLUMN_WAGE_INFORMATION, WageInformation.TABLE_NAME,
+                        COLUMN_NAME_END_DATETIME, COLUMN_NAME_BREAK_IN_MINUTES,
+                        COLUMN_NAME_MINUTES_WORKED, COLUMN_NAME_WAGE_INFORMATION,
+                        COLUMN_NAME_WAGE_INFORMATION, WageInformation.TABLE_NAME,
                         WageInformation._ID);
+
+        public static boolean addShift(SQLiteDatabase db, String startDate,
+                                       String startTime, String endDate,
+                                       String endTime, int breakInMinutes,
+                                       int minutesWorked) {
+
+            String startDateTime = startDate + "T" + startTime;
+            String endDateTime = endDate + "T" + endTime;
+
+            String query = String.format(
+                    "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES ('%s', '%s', %d, %d, %d)",
+                    TABLE_NAME, COLUMN_NAME_START_DATETIME, COLUMN_NAME_END_DATETIME,
+                    COLUMN_NAME_BREAK_IN_MINUTES, COLUMN_NAME_MINUTES_WORKED,
+                    COLUMN_NAME_WAGE_INFORMATION,
+                    startDateTime, endDateTime, breakInMinutes,
+                    minutesWorked, DEFAULT_ID
+            );
+
+            return executeQuery(db, query);
+        }
     }
 
     private static boolean executeQuery(SQLiteDatabase db, String query) {
