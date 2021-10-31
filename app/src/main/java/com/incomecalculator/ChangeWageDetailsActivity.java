@@ -15,6 +15,10 @@ import com.incomecalculator.db.DatabaseHelper;
 import com.incomecalculator.wages.Currency;
 import com.incomecalculator.wages.Wage;
 
+/**
+ * Displays form for changing the hourly rate of pay and currency used for
+ * calculating income.
+ */
 public class ChangeWageDetailsActivity extends AppCompatActivity {
 
     private SQLiteDatabase db;
@@ -44,6 +48,11 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
 
     //--- Event Listeners ---//
 
+    /**
+     * Submits the details of the hourly rate of pay and currency used if the
+     * inputs are valid. If the wage and currency are successfully updated,
+     * the activity terminates.
+     */
     public void submitWageDetails(View view) {
 
         String currencySymbol =
@@ -52,6 +61,7 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
 
         int currencyInSubunit;
 
+        // Get the value of the currency in its subunit if it has one
         if (hasSubunit) {
             currencyInSubunit = parseCurrencyInSubunit(
                     currencyInSubunitField.getEditText().getText().toString());
@@ -76,6 +86,12 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
 
     //--- Input Validation Methods ---//
 
+    /**
+     * Validates the form's inputs, and displays an error message upon
+     * encountering an invalid input.
+     *
+     * @return True if all inputs are valid, false otherwise
+     */
     private boolean validateInputs(String symbol, boolean hasSubunit,
                                    int currencyInSubunit, String hourlyWage) {
 
@@ -98,6 +114,11 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
 
     //--- Helper Methods ---//
 
+    /**
+     * Converts the given value of the currency in its subunit to an integer.
+     *
+     * @return A non-negative integer if the given String is valid, -1 otherwise
+     */
     private int parseCurrencyInSubunit(String input) {
 
         int value;
@@ -111,6 +132,13 @@ public class ChangeWageDetailsActivity extends AppCompatActivity {
         return value;
     }
 
+    /**
+     * Obtains references to all input fields and the submit button of the form,
+     * and sets up their event listeners.
+     *
+     * If the database contains wage and currency data, it is loaded into the
+     * form.
+     */
     private void setupFormComponents() {
 
         currencySymbolField = findViewById(R.id.currency_symbol_input);

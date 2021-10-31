@@ -39,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Obtains references to all buttons in the main menu, and sets up their
+     * event listeners.
+     */
     private void initializeButtons() {
 
         changeWageDetailsButton = findViewById(R.id.change_wage_details_button);
@@ -55,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Creates a database for the application if it does not have one.
+     */
     private void initializeDatabase() {
 
         DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());

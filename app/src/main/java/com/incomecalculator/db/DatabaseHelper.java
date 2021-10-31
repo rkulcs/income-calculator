@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+/**
+ * A collection of methods for initializing or updating a database.
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
@@ -33,6 +36,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Gets an instance of a writeable database to be used by the application.
+     */
     public static SQLiteDatabase getDatabase(Context context) {
 
         DatabaseHelper dbHelper = new DatabaseHelper(context);

@@ -8,6 +8,10 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
 
+/**
+ * A collection of shift details, such as the start and end dates and times,
+ * the number of paid minutes, and the number of unpaid minutes.
+ */
 public class Shift {
 
     //--- Instance Variables ---//
@@ -16,7 +20,15 @@ public class Shift {
     private Time startTime;
     private Date endDate;
     private Time endTime;
+
+    /**
+     * The minutes of the shift which are paid.
+     */
     private int minutesWorked;
+
+    /**
+     * The minutes of the shift which are unpaid.
+     */
     private int breakInMinutes;
 
     //--- Constructors ---//
@@ -56,8 +68,34 @@ public class Shift {
         return breakInMinutes;
     }
 
+    //--- Validation Methods ---//
+
+    /**
+     * Determines if the given break in minutes is valid by checking if it is
+     * shorter than the shift's length.
+     *
+     * @param start The start date and time of the shift
+     * @param end The end date and time of the shift
+     * @param breakInMinutes The minutes of the shift which are not paid
+     *
+     * @return True if the break is valid, false otherwise
+     */
+    public static boolean isValidBreak(Calendar start, Calendar end, int breakInMinutes) {
+
+        long startTime = start.getTimeInMillis();
+        long endTime = end.getTimeInMillis();
+        int shiftLength = (int) (endTime - startTime) / 1000 / 60;
+
+        return (breakInMinutes < shiftLength);
+    }
+
     //--- Database Interaction Methods ---//
 
+    /**
+     * Saves the details of the shift in the given database.
+     *
+     * @return True if the shift was successfully added, false otherwise
+     */
     public boolean saveInDatabase(SQLiteDatabase db) {
 
         return Contract.ShiftInformation.addShift(db, startDate.toString(), startTime.toString(),
