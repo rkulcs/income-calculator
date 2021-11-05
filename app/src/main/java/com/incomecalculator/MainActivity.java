@@ -39,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchShiftListActivity(View view) {
+
+        Intent intent = new Intent(this, ShiftListActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Obtains references to all buttons in the main menu, and sets up their
      * event listeners.
@@ -56,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         addShiftButton.setOnClickListener((view) -> {
             launchAddShiftActivity(view);
+        });
+
+        viewShiftsButton.setOnClickListener((view) -> {
+            launchShiftListActivity(view);
         });
     }
 
