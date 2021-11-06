@@ -46,6 +46,16 @@ public class Shift {
         this.breakInMinutes = breakInMinutes;
     }
 
+    public Shift(long start, long end, int breakInMinutes, int minutesWorked) {
+
+        this.startDate = new Date(start);
+        this.startTime = new Time(start);
+        this.endDate = new Date(end);
+        this.endTime = new Time(end);
+        this.minutesWorked = minutesWorked;
+        this.breakInMinutes = breakInMinutes;
+    }
+
     //--- Getters ---//
 
     public Date getStartDate() {
@@ -66,6 +76,16 @@ public class Shift {
 
     public int getBreakInMinutes() {
         return breakInMinutes;
+    }
+
+    //--- Main Methods ---//
+
+    /**
+     * Creates a String representation of the shift in the format
+     * <DATE> | <START TIME> - <END TIME>.
+     */
+    public String toString() {
+        return String.format("%s | %s - %s", getStartDate(), getStartTime(), getEndTime());
     }
 
     //--- Validation Methods ---//
@@ -98,7 +118,7 @@ public class Shift {
      */
     public boolean saveInDatabase(SQLiteDatabase db) {
 
-        return Contract.ShiftInformation.addShift(db, startDate.toString(), startTime.toString(),
-                endDate.toString(), endTime.toString(), breakInMinutes, minutesWorked);
+        return Contract.ShiftInformation.addShift(db, startDate.getTime(),
+                endDate.getTime(), breakInMinutes, minutesWorked);
     }
 }
