@@ -1,10 +1,13 @@
 package com.incomecalculator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
@@ -34,6 +37,9 @@ public class ShiftListActivity extends AppCompatActivity {
     private Spinner monthSpinner;
     private NumberPicker yearPicker;
 
+    private RecyclerView shiftList;
+    private LinearLayoutManager layoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +50,7 @@ public class ShiftListActivity extends AppCompatActivity {
 
         setupCalendar();
         setupDateSelectors();
+        setupShiftList();
     }
 
     //--- Event Listeners ---//
@@ -58,7 +65,8 @@ public class ShiftListActivity extends AppCompatActivity {
 
         Calendar upperBound = Calendar.getInstance();
         upperBound.set(yearPicker.getValue(), monthSpinner.getSelectedItemPosition(),
-                lowerBound.getMaximum(Calendar.MONTH));
+                lowerBound.getActualMaximum(Calendar.DAY_OF_MONTH));
+        System.out.println(upperBound.get(Calendar.DAY_OF_MONTH));
 
         shifts = Contract.ShiftInformation.getShifts(
                 db, lowerBound.getTimeInMillis(), upperBound.getTimeInMillis());
@@ -89,7 +97,7 @@ public class ShiftListActivity extends AppCompatActivity {
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getShifts();
+                updateShiftList();
             }
 
             @Override
@@ -106,8 +114,31 @@ public class ShiftListActivity extends AppCompatActivity {
         yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                getShifts();
+                updateShiftList();
             }
         });
+    }
+
+    /**
+     * Sets up the RecyclerView containing shift information.
+     */
+    private void setupShiftList() {
+
+        shiftList = findViewById(R.id.shift_list);
+        layoutManager = new LinearLayoutManager(this);
+        shiftList.setLayoutManager(layoutManager);
+
+        updateShiftList();
+    }
+
+    /**
+     * Retrieves shifts with the selected dates, and displays them in the
+     * RecyclerView containing the list of shifts.
+     */
+    private void updateShiftList() {
+
+        getShifts();
+        ShiftAdapter shiftAdapter = new ShiftAdapter(shifts);
+        shiftList.setAdapter(shiftAdapter);
     }
 }
