@@ -16,6 +16,7 @@ public class Shift {
 
     //--- Instance Variables ---//
 
+    private int id;
     private Date startDate;
     private Time startTime;
     private Date endDate;
@@ -46,8 +47,9 @@ public class Shift {
         this.breakInMinutes = breakInMinutes;
     }
 
-    public Shift(long start, long end, int breakInMinutes, int minutesWorked) {
+    public Shift(int id, long start, long end, int breakInMinutes, int minutesWorked) {
 
+        this.id = id;
         this.startDate = new Date(start);
         this.startTime = new Time(start);
         this.endDate = new Date(end);
@@ -120,5 +122,9 @@ public class Shift {
 
         return Contract.ShiftInformation.addShift(db, startDate.getTime(),
                 endDate.getTime(), breakInMinutes, minutesWorked);
+    }
+
+    public boolean deleteFromDatabase(SQLiteDatabase db) {
+        return Contract.ShiftInformation.deleteShift(db, id);
     }
 }

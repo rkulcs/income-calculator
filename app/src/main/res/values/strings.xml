@@ -13,4 +13,6 @@
     <string name="start_time_hh_mm">Start Time (HH:MM)</string>
     <string name="end_time_hh_mm">End Time (HH:MM)</string>
     <string name="break_in_minutes">Break in Minutes</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

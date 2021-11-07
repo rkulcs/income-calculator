@@ -10,6 +10,7 @@ import com.incomecalculator.wages.Currency;
 import com.incomecalculator.wages.Wage;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public final class Contract {
 
@@ -181,13 +182,21 @@ public final class Contract {
             return executeQuery(db, query);
         }
 
+        public static boolean deleteShift(SQLiteDatabase db, int id) {
+
+            String query = String.format("DELETE FROM %s WHERE %s = %d",
+                    TABLE_NAME, _ID, id);
+
+            return executeQuery(db, query);
+        }
+
         /**
          * Retrieves all shifts from the table within the specified date and time range.
          *
          * @param lowerBound The smallest date and time value that a shift can have
          * @param upperBound The largest date and time value that a shift can have
          */
-        public static Shift[] getShifts(SQLiteDatabase db, long lowerBound, long upperBound) {
+        public static ArrayList<Shift> getShifts(SQLiteDatabase db, long lowerBound, long upperBound) {
 
             String query = String.format(
                     "SELECT * FROM %s WHERE %s >= %d AND %s <= %d",
@@ -196,14 +205,10 @@ public final class Contract {
 
             Cursor cursor = db.rawQuery(query, null);
 
-            if (cursor.getCount() == 0)
-                return null;
+            ArrayList<Shift> shifts = new ArrayList<>();
 
-            Shift[] shifts = new Shift[cursor.getCount()];
-
-            for (int i = 0; i < shifts.length; i++) {
-                cursor.moveToNext();
-
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID));
                 long start = cursor.getLong(cursor.getColumnIndexOrThrow(
                         COLUMN_NAME_START_DATETIME));
                 long end = cursor.getLong(cursor.getColumnIndexOrThrow(
@@ -213,7 +218,7 @@ public final class Contract {
                 int minutesWorked = cursor.getInt(cursor.getColumnIndexOrThrow(
                         COLUMN_NAME_MINUTES_WORKED));
 
-                shifts[i] = new Shift(start, end, breakInMinutes, minutesWorked);
+                shifts.add(new Shift(id, start, end, breakInMinutes, minutesWorked));
             }
 
             return shifts;

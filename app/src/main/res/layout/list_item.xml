@@ -18,6 +18,40 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/edit_shift_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="@string/edit"
+                android:textColor="@color/teal_200"
+                app:rippleColor="@color/teal_200" />
+
+            <Button
+                android:id="@+id/delete_shift_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="@string/delete"
+                android:textColor="@color/design_default_color_error"
+                app:rippleColor="@color/design_default_color_error" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>

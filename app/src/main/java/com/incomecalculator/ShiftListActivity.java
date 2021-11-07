@@ -18,6 +18,7 @@ import com.incomecalculator.db.Contract;
 import com.incomecalculator.db.DatabaseHelper;
 import com.incomecalculator.shifts.Shift;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.sql.Date;
 
@@ -32,7 +33,7 @@ public class ShiftListActivity extends AppCompatActivity {
     private String[] months = new String[]{"January", "February", "March", "April", "May",
             "June", "July", "August", "September", "October", "November",
             "December"};
-    private Shift[] shifts;
+    private ArrayList<Shift> shifts;
 
     private Spinner monthSpinner;
     private NumberPicker yearPicker;
@@ -138,7 +139,7 @@ public class ShiftListActivity extends AppCompatActivity {
     private void updateShiftList() {
 
         getShifts();
-        ShiftAdapter shiftAdapter = new ShiftAdapter(shifts);
+        ShiftAdapter shiftAdapter = new ShiftAdapter(shifts, db);
         shiftList.setAdapter(shiftAdapter);
     }
 }
