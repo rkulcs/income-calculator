@@ -2,7 +2,9 @@ package com.incomecalculator;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +87,10 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         holder.getTextView().setText(shifts.get(position).toString());
 
         holder.getDeleteButton().setOnClickListener(
-                (view) -> deleteShiftFromList(holder.getView(), position));
+                (view) -> confirmShiftDeletion(holder.getView(), position));
+
+        holder.getEditButton().setOnClickListener(
+                (view) -> launchEditShiftActivity(holder.getView(), position));
     }
 
     //--- Getters ---//
@@ -97,11 +102,19 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
 
     //--- Helper Methods ---//
 
+    public void launchEditShiftActivity(View view, int position) {
+
+        Intent intent = new Intent(view.getContext(), ModifyShiftActivity.class);
+        intent.putExtra("type", ModifyShiftActivity.Type.EDIT);
+        intent.putExtra("shiftID", shifts.get(position).getID());
+        view.getContext().startActivity(intent);
+    }
+
     /**
      * Deletes the shift at the given position from the database and the
      * displayed list of shifts if the user confirms its deletion.
      */
-    private void deleteShiftFromList(View view, int position) {
+    private void confirmShiftDeletion(View view, int position) {
 
         // Create a confirmation dialog for deleting the shift
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(view.getContext());
@@ -111,9 +124,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                shifts.get(position).deleteFromDatabase(db);
-                shifts.remove(position);
-                notifyDataSetChanged();
+                deleteShift(position);
             }
         });
 
@@ -126,6 +137,13 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         });
 
         dialogBuilder.show();
+    }
+
+    private void deleteShift(int position) {
+
+        shifts.get(position).deleteFromDatabase(db);
+        shifts.remove(position);
+        notifyDataSetChanged();
     }
 
 }

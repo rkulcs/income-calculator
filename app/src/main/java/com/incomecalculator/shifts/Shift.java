@@ -60,25 +60,51 @@ public class Shift {
 
     //--- Getters ---//
 
+    public int getID() { return id; }
+
+    public void setID(int id) { this.id = id; }
+
     public Date getStartDate() {
         return startDate;
+    }
+
+    public String getStartDateString() {
+        return startDate.toString().replace("-", "/");
     }
 
     public Time getStartTime() {
         return startTime;
     }
 
+    public String getStartTimeString() {
+
+        String[] components = startTime.toString().split(":");
+        return components[0] + ":" + components[1];
+    }
+
     public Date getEndDate() {
         return endDate;
+    }
+
+    public String getEndDateString() {
+        return endDate.toString().replace("-", "/");
     }
 
     public Time getEndTime() {
         return endTime;
     }
 
+    public String getEndTimeString() {
+
+        String[] components = endTime.toString().split(":");
+        return components[0] + ":" + components[1];
+    }
+
     public int getBreakInMinutes() {
         return breakInMinutes;
     }
+
+    public int getMinutesWorked() { return minutesWorked; }
 
     //--- Main Methods ---//
 
@@ -124,6 +150,15 @@ public class Shift {
                 endDate.getTime(), breakInMinutes, minutesWorked);
     }
 
+    public boolean updateInDatabase(SQLiteDatabase db) {
+        return Contract.ShiftInformation.updateShift(db, this);
+    }
+
+    /**
+     * Deletes the details of the shift in the given database.
+     *
+     * @return True upon successful deletion, false otherwise
+     */
     public boolean deleteFromDatabase(SQLiteDatabase db) {
         return Contract.ShiftInformation.deleteShift(db, id);
     }

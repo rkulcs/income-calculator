@@ -39,6 +39,7 @@ public class ShiftListActivity extends AppCompatActivity {
     private NumberPicker yearPicker;
 
     private RecyclerView shiftList;
+    private ShiftAdapter shiftAdapter;
     private LinearLayoutManager layoutManager;
 
     @Override
@@ -52,6 +53,13 @@ public class ShiftListActivity extends AppCompatActivity {
         setupCalendar();
         setupDateSelectors();
         setupShiftList();
+    }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+        db.close();
     }
 
     //--- Event Listeners ---//
@@ -139,7 +147,7 @@ public class ShiftListActivity extends AppCompatActivity {
     private void updateShiftList() {
 
         getShifts();
-        ShiftAdapter shiftAdapter = new ShiftAdapter(shifts, db);
+        shiftAdapter = new ShiftAdapter(shifts, db);
         shiftList.setAdapter(shiftAdapter);
     }
 }

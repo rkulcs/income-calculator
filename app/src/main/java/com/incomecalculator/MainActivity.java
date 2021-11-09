@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void launchAddShiftActivity(View view) {
 
-        Intent intent = new Intent(this, AddShiftActivity.class);
+        Intent intent = new Intent(this, ModifyShiftActivity.class);
+        intent.putExtra("type", ModifyShiftActivity.Type.ADD);
         startActivity(intent);
     }
 

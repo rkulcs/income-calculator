@@ -182,12 +182,39 @@ public final class Contract {
             return executeQuery(db, query);
         }
 
+        public static boolean updateShift(SQLiteDatabase db, Shift shift) {
+
+            String query = String.format(
+                    "UPDATE %s SET %s = %d, %s = %d, %s = %d, %s = %d WHERE %s = %d",
+                    TABLE_NAME, COLUMN_NAME_START_DATETIME, shift.getStartDate().getTime(),
+                    COLUMN_NAME_END_DATETIME, shift.getEndDate().getTime(),
+                    COLUMN_NAME_BREAK_IN_MINUTES, shift.getBreakInMinutes(),
+                    COLUMN_NAME_MINUTES_WORKED, shift.getMinutesWorked(),
+                    _ID, shift.getID());
+
+            return executeQuery(db, query);
+        }
+
         public static boolean deleteShift(SQLiteDatabase db, int id) {
 
             String query = String.format("DELETE FROM %s WHERE %s = %d",
                     TABLE_NAME, _ID, id);
 
             return executeQuery(db, query);
+        }
+
+        public static Shift getShift(SQLiteDatabase db, int id) {
+
+            String query = String.format("SELECT * FROM %s WHERE %s = %d",
+                    TABLE_NAME, _ID, id);
+
+            Cursor cursor = db.rawQuery(query, null);
+
+            if (cursor.getCount() == 0)
+                return null;
+
+            cursor.moveToNext();
+            return createShiftInstance(cursor);
         }
 
         /**
@@ -208,20 +235,29 @@ public final class Contract {
             ArrayList<Shift> shifts = new ArrayList<>();
 
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID));
-                long start = cursor.getLong(cursor.getColumnIndexOrThrow(
-                        COLUMN_NAME_START_DATETIME));
-                long end = cursor.getLong(cursor.getColumnIndexOrThrow(
-                        COLUMN_NAME_END_DATETIME));
-                int breakInMinutes = cursor.getInt(cursor.getColumnIndexOrThrow(
-                        COLUMN_NAME_BREAK_IN_MINUTES));
-                int minutesWorked = cursor.getInt(cursor.getColumnIndexOrThrow(
-                        COLUMN_NAME_MINUTES_WORKED));
-
-                shifts.add(new Shift(id, start, end, breakInMinutes, minutesWorked));
+                shifts.add(createShiftInstance(cursor));
             }
 
             return shifts;
+        }
+
+        /**
+         * Creates a new instance of Shift based on the data in the current row
+         * of the given cursor.
+         */
+        public static Shift createShiftInstance(Cursor cursor) {
+
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(_ID));
+            long start = cursor.getLong(cursor.getColumnIndexOrThrow(
+                    COLUMN_NAME_START_DATETIME));
+            long end = cursor.getLong(cursor.getColumnIndexOrThrow(
+                    COLUMN_NAME_END_DATETIME));
+            int breakInMinutes = cursor.getInt(cursor.getColumnIndexOrThrow(
+                    COLUMN_NAME_BREAK_IN_MINUTES));
+            int minutesWorked = cursor.getInt(cursor.getColumnIndexOrThrow(
+                    COLUMN_NAME_MINUTES_WORKED));
+
+            return new Shift(id, start, end, breakInMinutes, minutesWorked);
         }
     }
 
