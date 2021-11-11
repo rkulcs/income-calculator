@@ -3,6 +3,7 @@ package com.incomecalculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -30,6 +31,13 @@ public class CalculateIncomeActivity extends AppCompatActivity {
         setupResultDisplays();
     }
 
+    //--- Event Listeners ---//
+
+    public void submitQuery(View view) {
+
+
+    }
+
     //--- Helper Methods ---//
 
     /**
@@ -40,6 +48,8 @@ public class CalculateIncomeActivity extends AppCompatActivity {
         minimumDateInput = findViewById(R.id.minimum_date_field);
         maximumDateInput = findViewById(R.id.maximum_date_field);
         calculateIncomeButton = findViewById(R.id.calculate_expected_income_button);
+
+        calculateIncomeButton.setOnClickListener((view) -> submitQuery(view));
     }
 
     /**
