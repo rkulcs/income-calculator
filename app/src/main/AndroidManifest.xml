@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IncomeCalculator">
         <activity
-            android:name=".ShiftListActivity"
+            android:name=".CalculateIncomeActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".ShiftListActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ModifyShiftActivity"
             android:exported="true"

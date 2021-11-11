@@ -46,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchCalculateIncomeActivity(View view) {
+
+        Intent intent = new Intent(this, CalculateIncomeActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Obtains references to all buttons in the main menu, and sets up their
      * event listeners.
@@ -57,17 +63,12 @@ public class MainActivity extends AppCompatActivity {
         viewShiftsButton = findViewById(R.id.view_shifts_button);
         calculateIncomeButton = findViewById(R.id.calculate_income_button);
 
-        changeWageDetailsButton.setOnClickListener((view) -> {
-            launchChangeWageDetailsActivity(view);
-        });
-
-        addShiftButton.setOnClickListener((view) -> {
-            launchAddShiftActivity(view);
-        });
-
-        viewShiftsButton.setOnClickListener((view) -> {
-            launchShiftListActivity(view);
-        });
+        changeWageDetailsButton.setOnClickListener(
+                (view) -> launchChangeWageDetailsActivity(view));
+        addShiftButton.setOnClickListener((view) -> launchAddShiftActivity(view));
+        viewShiftsButton.setOnClickListener((view) -> launchShiftListActivity(view));
+        calculateIncomeButton.setOnClickListener((view) ->
+                launchCalculateIncomeActivity(view));
     }
 
     /**
