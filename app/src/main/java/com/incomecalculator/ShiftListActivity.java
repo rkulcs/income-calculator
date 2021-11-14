@@ -75,7 +75,6 @@ public class ShiftListActivity extends AppCompatActivity {
         Calendar upperBound = Calendar.getInstance();
         upperBound.set(yearPicker.getValue(), monthSpinner.getSelectedItemPosition(),
                 lowerBound.getActualMaximum(Calendar.DAY_OF_MONTH));
-        System.out.println(upperBound.get(Calendar.DAY_OF_MONTH));
 
         shifts = Contract.ShiftInformation.getShifts(
                 db, lowerBound.getTimeInMillis(), upperBound.getTimeInMillis());

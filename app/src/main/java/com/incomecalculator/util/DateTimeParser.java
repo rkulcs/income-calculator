@@ -8,6 +8,20 @@ import java.util.Calendar;
 public final class DateTimeParser {
 
     /**
+     * Parses the given date String, and initializes a Calendar instance based
+     * on it.
+     * @param date The date to parse
+     * @param isStartOfDay If this is true, the time will be set to 00:00, otherwise
+     *                     it will be set to 23:59
+     * @return An instance of Calendar if the date is valid, null otherwise
+     */
+    public static Calendar getDate(String date, boolean isStartOfDay) {
+
+        String time = isStartOfDay ? "00:00" : "23:59";
+        return getDateTime(date, time);
+    }
+
+    /**
      * Parses the given date and time Strings, and initializes a Calendar instance
      * with them if they are valid.
      *

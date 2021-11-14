@@ -152,7 +152,7 @@ public class Wage {
      * Creates a String which represents the hourly rate of pay in terms of
      * both the currency and its subunit (if it has one).
      */
-    private String createHourlyRateString(int hourlyRate) {
+    public String createHourlyRateString(int hourlyRate) {
 
         if (!currency.hasSubunit())
             return Integer.toString(hourlyRate);

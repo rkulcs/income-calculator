@@ -242,6 +242,28 @@ public final class Contract {
         }
 
         /**
+         * Gets the total number of minutes worked in the given range of dates.
+         */
+        public static int getMinutesWorked(SQLiteDatabase db, long lowerBound, long upperBound) {
+
+            String query = String.format(
+                    "SELECT %s FROM %s WHERE %s >= %d AND %s <= %d",
+                    COLUMN_NAME_MINUTES_WORKED, TABLE_NAME,
+                    COLUMN_NAME_START_DATETIME, lowerBound,
+                    COLUMN_NAME_START_DATETIME, upperBound);
+
+            Cursor cursor = db.rawQuery(query, null);
+
+            int minutesWorked = 0;
+
+            while (cursor.moveToNext()) {
+                minutesWorked += cursor.getInt(0);
+            }
+
+            return minutesWorked;
+        }
+
+        /**
          * Creates a new instance of Shift based on the data in the current row
          * of the given cursor.
          */
