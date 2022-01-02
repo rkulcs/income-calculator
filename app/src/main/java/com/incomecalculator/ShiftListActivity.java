@@ -56,10 +56,10 @@ public class ShiftListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onResume() {
 
-        super.onStop();
-        db.close();
+        super.onResume();
+        updateShiftList();
     }
 
     //--- Event Listeners ---//
